@@ -19,8 +19,8 @@ async function login (req, res) {
     try {
         
         const token = await userServices.getToken(req.body)
-        res.setHeader('Set-Cookie', `token=${token}; HttpOnly`)
-        res.status(201).send({message: token})
+        res.setHeader('Authorization',`Bearer ${token}`)
+        res.status(200).send({message: "success"})
 
     } catch (error) { 
         return res.status(500).send(error.message)
