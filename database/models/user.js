@@ -6,6 +6,11 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  userId: {
+    type: String,
+    required: true,
+    unique: true
+  },
   email: {
     type: String,
     required: true,
@@ -14,6 +19,10 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  recoveryToken: {
+    type: String,
+    required: false
   }
 });
 
