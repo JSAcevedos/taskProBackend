@@ -19,8 +19,7 @@ async function login (req, res) {
     try {
         
         const token = await userServices.getToken(req.body)
-        res.setHeader('Authorization',`Bearer ${token}`)
-        res.status(200).send({message: "success"})
+        res.status(200).send({token: token})
 
     } catch (error) { 
         return res.status(500).send(error.message)
