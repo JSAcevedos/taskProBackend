@@ -3,12 +3,9 @@ const { requireHelper } = require('../util/helper');
 const config = requireHelper('config/config');
 
 async function initDatabase () {
-  try {
-    const connection = await mongoose.connect(config.dbUrl);
-    console.log('Database connected');
-  } catch (err) {
-    console.error(err);
-  }
+  await mongoose.connect(config.dbUrl)
+    .then(() => console.log('Database connected'))
+    .catch((error) => console.error(error))
 }
 
 module.exports = {
