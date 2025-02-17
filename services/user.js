@@ -53,7 +53,7 @@ async function getUser (userId) {
     try {
         const user = await User.findOne({
             userId: userId
-        }).select('-_id -__v -password -userId')
+        }).select('-_id -__v -password')
 
         if (!user) {
             throw new Error('User not found')
@@ -114,7 +114,7 @@ async function deleteUser (userId, password) {
         const user = await User.findOne({
             userId: userId
         })
-
+        
         if (!user) {
             throw new Error('User not found')
         }
