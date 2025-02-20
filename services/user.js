@@ -3,7 +3,7 @@ const { requireHelper } = require('../util/helper')
 const jwt = require("jsonwebtoken");
 const User = requireHelper('database/models/user')
 const config = requireHelper('config/config')
-const { v4: uuidv4, validate } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 const { encryptData } = requireHelper('util/encrypt');
 
 async function createUser (userData) {
