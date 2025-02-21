@@ -8,7 +8,7 @@ const taskSchema = new Schema({
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   completed: {
     type: Boolean,
@@ -24,7 +24,17 @@ const taskSchema = new Schema({
     required: true,
     min: 1,
     max: 10
+  },
+  userId: {
+    type: String,
+    required: true
   }
 });
 
+taskSchema.index(
+  { title: 1, description: 1 },
+  { unique: true, partialFilterExpression: { 
+    'completed' : false
+   } }
+)
 module.exports = mongoose.model('Task', taskSchema);

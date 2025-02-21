@@ -7,5 +7,7 @@ const router = Router()
 
 router.use(middlewares.authMiddleware)
 router.post('/create-task', taskController.createTask)
+router.get("/get-task/:taskId", taskController.getTask);
+router.get("/get-all-tasks", taskController.getAllTasks);
 
 module.exports = router
