@@ -80,11 +80,36 @@ async function uncompleteTasks(taskIds) {
   }
 }
 
+async function deleteTask(taskId) {
+  try {
+    await Task.findOneAndDelete(taskId)
+
+    return true
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+async function deleteMultipleTasks(taskIds) {
+  try {
+    await Task.deleteMany({
+      _id: {$in: taskIds}
+    })
+
+    return true
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+
 module.exports = {
     createTask,
     getTask,
     getAllTasks,
     updateTask, 
     completeTasks,
-    uncompleteTasks
+    uncompleteTasks,
+    deleteTask,
+    deleteMultipleTasks
 }

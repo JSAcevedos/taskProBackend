@@ -12,7 +12,7 @@ router.get("/get-all-tasks", taskController.getAllTasks)
 router.patch("/update-task/:taskId", taskController.updateTask)
 router.patch("/complete-tasks", taskController.completeTasks)
 router.patch("/uncomplete-tasks", taskController.uncompleteTasks)
-// router.delete("/delete-task", taskController.getAllTasks)
-// router.delete("/delete-tasks", taskController.getAllTasks)
+router.delete("/delete-task", taskController.deleteTask)
+router.delete("/delete-multiple-tasks", taskController.deleteMultipleTasks)
 
 module.exports = router
