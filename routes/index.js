@@ -8,4 +8,4 @@ const router = Router()
 router.use("/user", userRoutes)
 router.use("/task", taskRoutes)
 
-module.exports = router;
+module.exports = router

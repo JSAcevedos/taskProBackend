@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
 const taskSchema = new Schema({
   title: {
@@ -29,7 +29,7 @@ const taskSchema = new Schema({
     type: String,
     required: true
   }
-});
+})
 
 taskSchema.index(
   { title: 1, description: 1 },
@@ -37,4 +37,4 @@ taskSchema.index(
     'completed' : false
    } }
 )
-module.exports = mongoose.model('Task', taskSchema);
+module.exports = mongoose.model('Task', taskSchema)

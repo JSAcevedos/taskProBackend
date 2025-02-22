@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { requireHelper } = require('../util/helper');
-const config = requireHelper('config/config');
+const mongoose = require('mongoose')
+const { requireHelper } = require('../util/helper')
+const config = requireHelper('config/config')
 
 async function initDatabase () {
   await mongoose.connect(config.dbUrl)
@@ -10,4 +10,4 @@ async function initDatabase () {
 
 module.exports = {
   initDatabase
-};
+}

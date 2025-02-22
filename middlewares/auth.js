@@ -1,5 +1,5 @@
 const { requireHelper } = require('../util/helper')
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
 const { decryptData } = requireHelper('util/encrypt')
 const config = requireHelper('config/config')
 

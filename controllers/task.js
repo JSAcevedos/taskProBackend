@@ -9,54 +9,54 @@ async function createTask (req, res) {
 
     } catch (error) {   
         if (error.message == 11000) {
-          return res.status(400).send("Task already exists");
+          return res.status(400).send("Task already exists")
         }
-        return res.status(500).send(error.message);
+        return res.status(500).send(error.message)
     }
 }
 
 async function getTask(req, res) {
   try {
-    const task = await taskService.getTask(req.params.taskId);
-    res.status(201).send(task);
+    const task = await taskService.getTask(req.params.taskId)
+    res.status(201).send(task)
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message)
   }
 }
 
 async function getAllTasks(req, res) {
   try {
-    const tasks = await taskService.getAllTasks(req.userId);
-    res.status(201).send(tasks);
+    const tasks = await taskService.getAllTasks(req.userId)
+    res.status(201).send(tasks)
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message)
   }
 }
 
 async function updateTask(req, res) {
   try {
-    await taskService.updateTask(req.params.taskId, req.body);
-    res.status(201).send({message: "Task updated successfully"});
+    await taskService.updateTask(req.params.taskId, req.body)
+    res.status(201).send({message: "Task updated successfully"})
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message)
   }
 }
 
 async function completeTasks(req, res) {
   try {
-    await taskService.completeTasks(req.body);
-    res.status(201).send(true);
+    await taskService.completeTasks(req.body)
+    res.status(201).send(true)
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message)
   }
 }
 
 async function uncompleteTasks(req, res) {
   try {
-    await taskService.uncompleteTasks(req.body);
-    res.status(201).send(true);
+    await taskService.uncompleteTasks(req.body)
+    res.status(201).send(true)
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message)
   }
 }
 

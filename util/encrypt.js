@@ -1,4 +1,4 @@
-const CryptoJS = require("crypto-js");
+const CryptoJS = require("crypto-js")
 const { requireHelper } = require('./helper')
 const config = requireHelper('config/config')
 

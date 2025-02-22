@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt')
 const { requireHelper } = require('../util/helper')
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
 const User = requireHelper('database/models/user')
 const config = requireHelper('config/config')
-const { v4: uuidv4 } = require('uuid');
-const { encryptData } = requireHelper('util/encrypt');
+const { v4: uuidv4 } = require('uuid')
+const { encryptData } = requireHelper('util/encrypt')
 
 async function createUser (userData) {
     try {
@@ -41,7 +41,7 @@ async function getToken (userData) {
             await user.save()
         }
 
-        const token = jwt.sign({userId: user.userId}, config.secretJwtKey, { expiresIn: '7d' });
+        const token = jwt.sign({userId: user.userId}, config.secretJwtKey, { expiresIn: '7d' })
 
         return encryptData(token)
     } catch (error) {
@@ -141,7 +141,7 @@ async function recoverPassword (email, userId) {
             throw new Error('User not found')
         }
 
-        const token = jwt.sign({}, config.secretJwtKey, { expiresIn: '1h' });
+        const token = jwt.sign({}, config.secretJwtKey, { expiresIn: '1h' })
 
         user.recoveryToken = token
         await user.save()
@@ -154,7 +154,7 @@ async function recoverPassword (email, userId) {
 
 async function resetPassword (token, password) {
     try {
-        jwt.verify(token, config.secretJwtKey);
+        jwt.verify(token, config.secretJwtKey)
         const user = await User.findOne({
             recoveryToken: token,
         })
