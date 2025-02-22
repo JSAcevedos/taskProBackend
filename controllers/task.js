@@ -33,8 +33,38 @@ async function getAllTasks(req, res) {
   }
 }
 
+async function updateTask(req, res) {
+  try {
+    await taskService.updateTask(req.params.taskId, req.body);
+    res.status(201).send({message: "Task updated successfully"});
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+async function completeTasks(req, res) {
+  try {
+    await taskService.completeTasks(req.body);
+    res.status(201).send(true);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+async function uncompleteTasks(req, res) {
+  try {
+    await taskService.uncompleteTasks(req.body);
+    res.status(201).send(true);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
 module.exports = {
     createTask,
     getTask,
-    getAllTasks
+    getAllTasks,
+    updateTask, 
+    completeTasks,
+    uncompleteTasks
 }

@@ -9,5 +9,10 @@ router.use(middlewares.authMiddleware)
 router.post('/create-task', taskController.createTask)
 router.get("/get-task/:taskId", taskController.getTask);
 router.get("/get-all-tasks", taskController.getAllTasks);
+router.patch("/update-task/:taskId", taskController.updateTask);
+router.patch("/complete-tasks", taskController.completeTasks);
+router.patch("/uncomplete-tasks", taskController.uncompleteTasks);
+// router.delete("/delete-task", taskController.getAllTasks);
+// router.delete("/delete-tasks", taskController.getAllTasks);
 
 module.exports = router

@@ -42,8 +42,49 @@ async function getAllTasks(userId) {
   }
 }
 
+async function updateTask(taskId, newTask) {
+  try {
+    await Task.findByIdAndUpdate(taskId, newTask).select("-__v -userId")
+
+    return true
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+async function completeTasks(taskIds) {
+  try {
+    await Task.find({
+      _id: {$in: taskIds}
+    }).updateMany({
+      completed: true
+    })
+
+    return true
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+async function uncompleteTasks(taskIds) {
+  try {
+    await Task.find({
+      _id: {$in: taskIds}
+    }).updateMany({
+      completed: false
+    })
+
+    return true
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 module.exports = {
     createTask,
     getTask,
-    getAllTasks
+    getAllTasks,
+    updateTask, 
+    completeTasks,
+    uncompleteTasks
 }
