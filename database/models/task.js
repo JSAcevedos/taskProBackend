@@ -32,9 +32,9 @@ const taskSchema = new Schema({
 })
 
 taskSchema.index(
-  { title: 1, description: 1 },
+  { title: 1, description: 1, dueDate: 1, userId: 1 },
   { unique: true, partialFilterExpression: { 
     'completed' : false
-   } }
+  }}
 )
 module.exports = mongoose.model('Task', taskSchema)

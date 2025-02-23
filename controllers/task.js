@@ -38,7 +38,10 @@ async function updateTask(req, res) {
     await taskService.updateTask(req.params.taskId, req.body)
     res.status(200).send({message: "Task updated successfully"})
   } catch (error) {
-    return res.status(500).send(error.message)
+    if (error.message == 11000) {
+        return res.status(400).send("Duplicated title and description for the same date")
+      }
+      return res.status(500).send(error.message)
   }
 }
 

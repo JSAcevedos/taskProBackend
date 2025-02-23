@@ -15,7 +15,7 @@ async function createTask (taskData, userId) {
         await task.save()
 
     } catch (error) {
-        throw new Error(error.errorResponse.code ? error.errorResponse.code : error)
+      throw new Error(error.errorResponse.code ? error.errorResponse.code : error)
     }
 }
 
@@ -48,7 +48,7 @@ async function updateTask(taskId, newTask) {
 
     return true
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error.errorResponse.code ? error.errorResponse.code : error)
   }
 }
 
