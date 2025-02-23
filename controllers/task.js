@@ -3,7 +3,6 @@ const taskService = requireHelper('services/task')
 
 async function createTask (req, res) {
     try {
-        
         await taskService.createTask(req.body, req.userId)
         res.status(201).send({message: "Task created successfully"})
 
