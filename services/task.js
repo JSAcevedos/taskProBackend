@@ -82,7 +82,7 @@ async function uncompleteTasks(taskIds) {
 
 async function deleteTask(taskId) {
   try {
-    await Task.findOneAndDelete(taskId)
+    await Task.findByIdAndDelete(taskId)
 
     return true
   } catch (error) {
