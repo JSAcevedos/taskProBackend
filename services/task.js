@@ -32,9 +32,15 @@ async function getTask(taskId) {
 async function getAllTasks(userId) {
   try {
     const filter = {
-      userId: userId,
+      userId: userId
     }
-    const tasks = await Task.find(filter).select("-__v -userId")
+
+    const tasks = await Task.find(filter)
+      .select("-__v -userId")
+      .sort({
+        completed: 1,
+        dueDate: -1
+      })
 
     return tasks
   } catch (error) {
