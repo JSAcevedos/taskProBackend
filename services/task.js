@@ -39,7 +39,7 @@ async function getAllTasks(userId) {
       .select("-__v -userId")
       .sort({
         completed: 1,
-        dueDate: -1
+        dueDate: 1
       })
 
     return tasks
