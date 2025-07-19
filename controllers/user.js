@@ -1,5 +1,6 @@
 const { requireHelper } = require('../util/helper')
 const userServices = requireHelper('services/user')
+const captchaServices = requireHelper('services/captcha')
 
 async function createUser (req, res) {
     try {
@@ -17,6 +18,12 @@ async function createUser (req, res) {
 
 async function login (req, res) {
     try {
+
+        const isHuman = await captchaServices.verifyCaptcha(req.body.captchaToken);
+
+        if (!isHuman) {
+            return res.status(400).json({ message: 'CAPTCHA inválido' });
+        }
         
         const token = await userServices.getToken(req.body)
         res.status(200).send({token: token})
@@ -28,7 +35,6 @@ async function login (req, res) {
 
 async function getUser (req, res) {
     try {
-        
         const user = await userServices.getUser(req.userId)
         res.status(200).send({data: user})
 
