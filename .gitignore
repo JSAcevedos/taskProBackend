@@ -1,2 +1,6 @@
 node_modules/
 .env
+
+# Ignore certificates
+certs/localhost.key
+certs/localhost.crt

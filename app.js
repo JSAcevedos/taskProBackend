@@ -4,6 +4,8 @@ const database = requireHelper('database/index')
 const routes = requireHelper('routes/index')
 const config = requireHelper('config/config')
 const cors = require('cors')
+const fs = require('fs')
+const https = require('https')
 
 const port = config.appPort
 
@@ -11,14 +13,18 @@ async function startApp() {
   try {
     const db = await database.initDatabase()
     const app = express()
+    const sslOptions = {
+      key: fs.readFileSync('./certs/localhost.key'),
+      cert: fs.readFileSync('./certs/localhost.crt'),
+    }
 
     app.use(cors())
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
     app.use(routes)
-
-    app.listen(port, () => {
-      console.log(`App listening on port ${port}`)
+    
+    https.createServer(sslOptions, app).listen(port, () => {
+      console.log(`HTTPS server started on port ${port}`)
     })
 
     module.exports = { app, db }
