@@ -1,6 +1,6 @@
 node_modules/
 .env
-
+.vscode/
 # Ignore certificates
 certs/localhost.key
 certs/localhost.crt

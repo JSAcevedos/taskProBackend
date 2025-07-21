@@ -4,6 +4,7 @@ const database = requireHelper('database/index')
 const routes = requireHelper('routes/index')
 const config = requireHelper('config/config')
 const cors = require('cors')
+const rateLimit = require('express-rate-limit')
 const fs = require('fs')
 const https = require('https')
 
@@ -13,6 +14,7 @@ async function startApp() {
   try {
     const db = await database.initDatabase()
     const app = express()
+
     const sslOptions = {
       key: fs.readFileSync('./certs/localhost.key'),
       cert: fs.readFileSync('./certs/localhost.crt'),
