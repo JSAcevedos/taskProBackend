@@ -18,9 +18,22 @@ async function startApp() {
       cert: fs.readFileSync('./certs/localhost.crt'),
     }
 
+    // Set up rate limiting to prevent abuse - DDoS protection on Backend
+    const limiter = rateLimit({
+      windowMs: 1 * 60 * 1000, // 1 minute
+      max: 50, // Limit each IP to 50 requests per windowMs
+      message: {
+        status: 429,
+        error: 'Too many requests, please try again later.'
+      },
+      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+      legacyHeaders: false // Disable the `X-RateLimit-*` headers
+    })
+
     app.use(cors())
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
+    app.use(limiter)
     app.use(routes)
     
     https.createServer(sslOptions, app).listen(port, () => {
