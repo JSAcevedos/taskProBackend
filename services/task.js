@@ -1,22 +1,52 @@
 const { requireHelper } = require('../util/helper')
 const Task = requireHelper('database/models/task')
+const Auditoria = requireHelper('services/audit/auditMongo.js'); 
 
-async function createTask (taskData, userId) {
-    try {
-        const taskStructure = {
-            title: taskData.title,
-            description: taskData.description,
-            dueDate: taskData.dueDate,
-            priority: taskData.priority,
-            userId: userId
-        }
 
-        const task = new Task(taskStructure)
-        await task.save()
 
-    } catch (error) {
-      throw new Error(error.errorResponse.code ? error.errorResponse.code : error)
-    }
+
+
+async function logAuditoria({ userId, accion, recurso, idRecurso, datos }) {
+  try {
+    await Auditoria.create({
+      userId,
+      accion,
+      recurso,
+      idRecurso,
+      datos,
+      fecha: new Date()
+    });
+  } catch (error) {
+    console.error("Error al registrar auditoría:", error.message);
+  }
+}
+
+
+
+async function createTask(taskData, userId) {
+  try {
+    const taskStructure = {
+      title: taskData.title,
+      description: taskData.description,
+      dueDate: taskData.dueDate,
+      priority: taskData.priority,
+      userId: userId
+    };
+
+    const task = new Task(taskStructure);
+    await task.save();
+
+    await logAuditoria({
+      userId,
+      accion: 'CREATE_TASK',
+      recurso: 'task',
+      idRecurso: task._id,
+      datos: taskData
+    });
+
+  } catch (error) {
+    throw new Error(error.errorResponse?.code || error);
+  }
 }
 
 async function getTask(taskId) {
@@ -50,61 +80,97 @@ async function getAllTasks(userId) {
 
 async function updateTask(taskId, newTask) {
   try {
-    await Task.findByIdAndUpdate(taskId, newTask).select("-__v -userId")
+    await Task.findByIdAndUpdate(taskId, newTask).select("-__v -userId");
 
-    return true
+    await logAuditoria({
+      userId: newTask.userId, // o pásalo desde fuera si no lo tienes aquí
+      accion: 'UPDATE_TASK',
+      recurso: 'task',
+      idRecurso: taskId,
+      datos: newTask
+    });
+
+    return true;
   } catch (error) {
-    throw new Error(error.errorResponse.code ? error.errorResponse.code : error)
+    throw new Error(error.errorResponse?.code || error);
   }
 }
 
 async function completeTasks(taskIds) {
   try {
-    await Task.find({
-      _id: {$in: taskIds}
-    }).updateMany({
-      completed: true
-    })
+    await Task.updateMany(
+      { _id: { $in: taskIds } },
+      { completed: true }
+    );
 
-    return true
+    await logAuditoria({
+      userId: null, // pásalo si lo tienes
+      accion: 'COMPLETE_TASKS',
+      recurso: 'task',
+      idRecurso: null,
+      datos: { taskIds }
+    });
+
+    return true;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
 async function uncompleteTasks(taskIds) {
   try {
-    await Task.find({
-      _id: {$in: taskIds}
-    }).updateMany({
-      completed: false
-    })
+    await Task.updateMany(
+      { _id: { $in: taskIds } },
+      { completed: false }
+    );
 
-    return true
+    await logAuditoria({
+      userId: null,
+      accion: 'UNCOMPLETE_TASKS',
+      recurso: 'task',
+      idRecurso: null,
+      datos: { taskIds }
+    });
+
+    return true;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
 async function deleteTask(taskId) {
   try {
-    await Task.findByIdAndDelete(taskId)
+    await Task.findByIdAndDelete(taskId);
 
-    return true
+    await logAuditoria({
+      userId: null,
+      accion: 'DELETE_TASK',
+      recurso: 'task',
+      idRecurso: taskId,
+      datos: null
+    });
+
+    return true;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
 async function deleteMultipleTasks(taskIds) {
   try {
-    await Task.deleteMany({
-      _id: {$in: taskIds}
-    })
+    await Task.deleteMany({ _id: { $in: taskIds } });
 
-    return true
+    await logAuditoria({
+      userId: null,
+      accion: 'DELETE_MULTIPLE_TASKS',
+      recurso: 'task',
+      idRecurso: null,
+      datos: { taskIds }
+    });
+
+    return true;
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 }
 
