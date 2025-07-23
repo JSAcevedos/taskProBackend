@@ -7,6 +7,7 @@ const cors = require('cors')
 const rateLimit = require('express-rate-limit')
 const fs = require('fs')
 const https = require('https')
+const errorHandler = require('./middlewares/errorHandler');
 
 const port = config.appPort
 
@@ -37,6 +38,7 @@ async function startApp() {
     app.use(express.urlencoded({ extended: true }))
     app.use(limiter)
     app.use(routes)
+    app.use(errorHandler);
     
     https.createServer(sslOptions, app).listen(port, () => {
       console.log(`HTTPS server started on port ${port}`)

@@ -2,11 +2,12 @@ const { Router } = require("express")
 const { requireHelper } = require('../util/helper')
 const userController = requireHelper('controllers/user')
 const middlewares = requireHelper('middlewares/auth')
+const { validateLogin, validateUser } = require('../middlewares/validators/userValidator');
 
 const router = Router()
 
-router.post('/create-user', userController.createUser)
-router.post('/login', userController.login)
+router.post('/create-user', validateUser, userController.createUser)
+router.post('/login', validateLogin, userController.login);
 router.post('/recover-password', userController.recoverPassword)
 router.patch('/reset-password', userController.resetPassword)
 
