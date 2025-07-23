@@ -2,35 +2,35 @@ const { requireHelper } = require('../util/helper')
 const userServices = requireHelper('services/user')
 const captchaServices = requireHelper('services/captcha')
 
-async function createUser (req, res) {
-    try {
-        
-        const userId = await userServices.createUser(req.body)
-        res.status(201).send({userId: userId})
-
-    } catch (error) {   
-        if (error.message == 11000) {
-            return res.status(400).send('Email already exists')
-        }
-        return res.status(500).send(error.message)
+async function createUser(req, res, next) {
+  try {
+    const userId = await userServices.createUser(req.body);
+    res.status(201).json({ userId });
+  } catch (error) {
+    if (error.message == 11000 || error.code === 11000) {
+      return res.status(400).send('Email already exists');
     }
+    next(error); // Pasa el error al manejador de errores de Express
+  }
 }
 
-async function login (req, res) {
-    try {
 
-        const isHuman = await captchaServices.verifyCaptcha(req.body.captchaToken);
+async function login(req, res, next) {
+  try {
+    const isHuman = await captchaServices.verifyCaptcha(req.body.captchaToken);
 
-        if (!isHuman) {
-            return res.status(400).json({ message: 'CAPTCHA inválido' });
-        }
-        
-        const token = await userServices.getToken(req.body)
-        res.status(200).send({token: token})
-
-    } catch (error) { 
-        return res.status(500).send(error.message)
+    if (!isHuman) {
+      const error = new Error('Invalid CAPTCHA');
+      error.statusCode = 400;
+      throw error;
     }
+
+    const token = await userServices.getToken(req.body);
+    res.status(200).json({ token });
+
+  } catch (err) {
+    next(err); // Pasa al middleware global
+  }
 }
 
 async function getUser (req, res) {

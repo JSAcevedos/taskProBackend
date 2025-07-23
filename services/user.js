@@ -6,48 +6,50 @@ const config = requireHelper('config/config')
 const { v4: uuidv4 } = require('uuid')
 const { encryptData } = requireHelper('util/encrypt')
 
-async function createUser (userData) {
-    try {
-        const hashedPassword = await bcrypt.hash(userData.password, 10)
-        const user = new User({
-            name: userData.name,
-            userId: uuidv4(),
-            email: userData.email,
-            password: hashedPassword
-        })
+async function createUser(userData) {
+  try {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-        await user.save()
+    const user = new User({
+      name: userData.name,
+      userId: uuidv4(),
+      email: userData.email,
+      password: hashedPassword
+    });
 
-        return user.userId
-    } catch (error) {
-        throw new Error(error.errorResponse.code ? error.errorResponse.code : error)
-    }
+    await user.save();
+
+    return user.userId;
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function getToken (userData) {
-    try {
-        const user = await User.findOne({
-            email: userData.email
-        })
+async function getToken(userData) {
+  const user = await User.findOne({ email: userData.email });
 
-        if (!user) {
-            throw new Error('User not found')
-        }
+  if (!user) {
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
+  }
 
-        await validatePassword(userData.password, user.password)
+  await validatePassword(userData.password, user.password);
+  
+  if (user.recoveryToken) {
+    user.recoveryToken = undefined;
+    await user.save();
+  }
 
-        if(user.recoveryToken){
-            user.recoveryToken = undefined
-            await user.save()
-        }
+  const token = jwt.sign(
+    { userId: user.userId },
+    config.secretJwtKey,
+    { expiresIn: '7d' }
+  );
 
-        const token = jwt.sign({userId: user.userId}, config.secretJwtKey, { expiresIn: '7d' })
-
-        return encryptData(token)
-    } catch (error) {
-        throw new Error(error.message)
-    }
+  return encryptData(token);
 }
+
 
 async function getUser (userId) {
     try {
